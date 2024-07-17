@@ -69,7 +69,6 @@ namespace Game
                 if (Health <= 0)
                 {
                     onDead?.Invoke(this);
-                    Destroy(gameObject);
                 }
             }
         }

@@ -41,10 +41,17 @@ namespace Game
             enemy.Position = _SpawnLocations[Random.Range(0, _SpawnLocations.Length)].position;
             enemy.MoveSpeed = Random.Range(gc.EnemySpeedMin, gc.EnemySpeedMax);
             enemy.onCrossedFinishLine = OnCrossedFinishLine;
-            enemy.onDead = (e) => GameController.Instance.EnemyDied();
+            enemy.onDead = OnDead;
             enemy.Health = gc.EnemyHealth;
 
             enemies.Add(enemy);
+        }
+
+        void OnDead(BaseEnemy enemy)
+        {
+            enemies.Remove(enemy);
+            GameController.Instance.EnemyFactory.Release(enemy);
+            GameController.Instance.EnemyDied();
         }
 
         void OnCrossedFinishLine(BaseEnemy enemy)
