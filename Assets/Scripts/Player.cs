@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game
@@ -15,6 +17,42 @@ namespace Game
         readonly PlayerInput _input = new();
 
         float _shootingDelay = 0f;
+
+        List<Transform> _animations = new();
+
+        Transform _idle;
+
+        Transform _walk;
+
+        Transform _currentAnimation;
+
+        void Awake()
+        {
+            Init();
+        }
+
+        void Init()
+        {
+            _idle = transform.Find("Astrounaut/idle_up");
+            _walk = transform.Find("Astrounaut/walk_up");
+            _animations.Add(_idle);
+            _animations.Add(_walk);
+        }
+
+        void SetAnimtion(Transform transform)
+        {
+            if (_currentAnimation != null && transform == _currentAnimation)
+            {
+                return;
+            }
+
+            foreach (var a in _animations)
+            {
+                a.gameObject.SetActive(a == transform);
+            }
+
+            _currentAnimation = transform;
+        }
 
         void Update()
         {
@@ -51,6 +89,11 @@ namespace Game
                 }
 
                 transform.position = transform.position + (Vector3) deltaMove;
+
+                SetAnimtion(_walk);
+            } else
+            {
+                SetAnimtion(_idle);
             }
         }
 

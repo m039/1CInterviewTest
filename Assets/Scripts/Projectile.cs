@@ -13,10 +13,23 @@ namespace Game
             var projectile = GameObject.Instantiate(prefab).GetComponent<Projectile>();
             projectile._direction = direction;
             projectile.transform.position = position;
+
             return projectile;
         }
 
         Vector2 _direction;
+
+        void Start()
+        {
+            Init();
+        }
+
+        void Init()
+        {
+            var bullet = transform.Find("Visual");
+
+            bullet.rotation = Quaternion.LookRotation(Vector3.forward, _direction.normalized);
+        }
 
         void Update()
         {

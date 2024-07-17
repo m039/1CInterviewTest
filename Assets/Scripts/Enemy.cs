@@ -68,6 +68,8 @@ namespace Game
                 Health -= GameController.Instance.ProjectileDamage;
                 if (Health <= 0)
                 {
+                    Explosion.Create(Position);
+
                     onDead?.Invoke(this);
                 }
             }
