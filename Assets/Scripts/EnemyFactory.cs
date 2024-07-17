@@ -6,7 +6,8 @@ namespace Game
 {
     public enum EnemyTag
     {
-        Simple = 0
+        Simple = 0,
+        Agressive = 1
     }
 
     public class EnemyFactory
@@ -72,6 +73,11 @@ namespace Game
             _builders.Add(EnemyTag.Simple, () =>
             {
                 return Load("SimpleEnemy");
+            });
+
+            _builders.Add(EnemyTag.Agressive, () =>
+            {
+                return Load("AgressiveEnemy");
             });
         }
 
