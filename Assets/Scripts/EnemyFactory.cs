@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 
 namespace Game
 {
@@ -18,14 +15,14 @@ namespace Game
 
         GameObject _parent;
 
-        Dictionary<EnemyTag, List<IEnemy>> _pool = new();
+        Dictionary<EnemyTag, List<BaseEnemy>> _pool = new();
 
         public EnemyFactory()
         {
             Init();
         }
 
-        public IEnemy Create(EnemyTag tag)
+        public BaseEnemy Create(EnemyTag tag)
         {
             if (_builders.TryGetValue(tag, out var builder))
             {
@@ -34,7 +31,7 @@ namespace Game
                     _parent = new GameObject("<< Enemies >>");
                 }
 
-                IEnemy enemy;
+                BaseEnemy enemy;
 
                 if (_pool.TryGetValue(tag, out var list) && list.Count > 0)
                 {
@@ -45,12 +42,11 @@ namespace Game
                     var instance = UnityEngine.Object.Instantiate(builder());
                     instance.transform.SetParent(_parent.transform);
 
-                    enemy = instance.GetComponent<IEnemy>();
+                    enemy = instance.GetComponent<BaseEnemy>();
                     enemy.Tag = tag;
                 }
 
-                var go = ((MonoBehaviour)enemy).gameObject;
-                go.SetActive(true);
+                enemy.gameObject.SetActive(true);
 
                 return enemy;
             }
@@ -58,18 +54,16 @@ namespace Game
             throw new Exception("Can't find a builder");
         }
 
-        public void Release(IEnemy enemy)
+        public void Release(BaseEnemy enemy)
         {
-            var go = ((MonoBehaviour)enemy).gameObject;
-
-            go.SetActive(false);
+            enemy.gameObject.SetActive(false);
 
             if (_pool.TryGetValue(enemy.Tag, out var list))
             {
                 list.Add(enemy);
             } else
             {
-                _pool.Add(enemy.Tag, new List<IEnemy> { enemy });
+                _pool.Add(enemy.Tag, new List<BaseEnemy> { enemy });
             }
         }
 

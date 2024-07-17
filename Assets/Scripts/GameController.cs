@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game {
 
@@ -13,10 +14,14 @@ namespace Game {
 
         public float EnemySpeedMax = 5f;
 
+        public int PlayerHealth = 20;
+
         [Header("Game Objects")]
         [SerializeField] FinishLine _FinishLine;
 
         [SerializeField] EnemySpawner _EnemySpawner;
+
+        [SerializeField] GameUI _ui;
 
         #endregion
 
@@ -31,7 +36,28 @@ namespace Game {
 
         void Start()
         {
+            _ui.HealthCounter = PlayerHealth;
+            _ui.onRestart += OnRestart;
+            _ui.HideAllScreens();
+
             _EnemySpawner.Spawn();
+        }
+
+        void OnRestart()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        public void EnemyCrossedFinishedLine()
+        {
+            _ui.HealthCounter -= 1;
+
+            if (_ui.HealthCounter <= 0)
+            {
+                _ui.ShowLoseScreen();
+                Time.timeScale = 0f;
+            }
         }
     }
 

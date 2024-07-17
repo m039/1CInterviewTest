@@ -4,29 +4,15 @@ using UnityEngine;
 
 namespace Game
 {
-    public interface IEnemy
+
+    public abstract class BaseEnemy : MonoBehaviour
     {
-        EnemyTag Tag { get; set; }
-
-        Vector2 Position { get; set; }
-
-        float MoveSpeed { get; set; }
-
-        event System.Action<IEnemy> onCrossedFinishLine;
-    }
-
-    public class Enemy : MonoBehaviour, IEnemy
-    {
-        #region Inspector
-
-        [SerializeField] CircleCollider2D _Collider;
-
-        #endregion
-
-        public Vector2 Position {
+        public Vector2 Position
+        {
             get => transform.position;
 
-            set {
+            set
+            {
                 var p = transform.position;
                 p.x = value.x;
                 p.y = value.y;
@@ -38,7 +24,16 @@ namespace Game
 
         public EnemyTag Tag { get; set; }
 
-        public event System.Action<IEnemy> onCrossedFinishLine;
+        public System.Action<BaseEnemy> onCrossedFinishLine;
+    }
+
+    public class Enemy : BaseEnemy
+    {
+        #region Inspector
+
+        [SerializeField] CircleCollider2D _Collider;
+
+        #endregion
 
         void Update()
         {
