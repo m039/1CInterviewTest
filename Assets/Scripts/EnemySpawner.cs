@@ -12,7 +12,28 @@ namespace Game
 
         #endregion
 
-        public void Spawn()
+        public List<BaseEnemy> enemies = new();
+
+        float _timeout = 0f;
+
+        void Update()
+        {
+            ProcessUpdate();
+        }
+
+        void ProcessUpdate()
+        {
+            _timeout -= Time.deltaTime;
+
+            if (_timeout <= 0f)
+            {
+                Spawn();
+                var gc = GameController.Instance;
+                _timeout = Random.Range(gc.EnemySpawnTimeoutMin, gc.EnemySpawnTimeoutMax);
+            }
+        }
+
+        void Spawn()
         {
             var gc = GameController.Instance;
             var enemy = gc.EnemyFactory.Create(EnemyTag.Simple);
@@ -20,6 +41,10 @@ namespace Game
             enemy.Position = _SpawnLocations[Random.Range(0, _SpawnLocations.Length)].position;
             enemy.MoveSpeed = Random.Range(gc.EnemySpeedMin, gc.EnemySpeedMax);
             enemy.onCrossedFinishLine = OnCrossedFinishLine;
+            enemy.onDead = (e) => GameController.Instance.EnemyDied();
+            enemy.Health = gc.EnemyHealth;
+
+            enemies.Add(enemy);
         }
 
         void OnCrossedFinishLine(BaseEnemy enemy)
@@ -28,7 +53,7 @@ namespace Game
 
             GameController.Instance.EnemyFactory.Release(enemy);
 
-            Spawn();
+            enemies.Remove(enemy);
         }
     }
 }

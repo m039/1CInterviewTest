@@ -7,6 +7,8 @@ namespace Game
 
     public abstract class BaseEnemy : MonoBehaviour
     {
+        public int Health { get; set; }
+
         public Vector2 Position
         {
             get => transform.position;
@@ -25,6 +27,8 @@ namespace Game
         public EnemyTag Tag { get; set; }
 
         public System.Action<BaseEnemy> onCrossedFinishLine;
+
+        public System.Action<BaseEnemy> onDead;
     }
 
     public class Enemy : BaseEnemy
@@ -52,6 +56,22 @@ namespace Game
             }
 
             Position = p;
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            var p = collision.GetComponentInParent<Projectile>();
+            if (p != null)
+            {
+                Destroy(p.gameObject);
+
+                Health -= GameController.Instance.ProjectileDamage;
+                if (Health <= 0)
+                {
+                    onDead?.Invoke(this);
+                    Destroy(gameObject);
+                }
+            }
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Game
 
         [SerializeField] RectTransform _LoseScreen;
 
+        [SerializeField] RectTransform _WinScreen;
+
         #endregion
 
         public event System.Action onRestart;
@@ -44,6 +46,7 @@ namespace Game
         void Init()
         {
             _screens.Add(_LoseScreen);
+            _screens.Add(_WinScreen);
         }
 
         void ShowScreen(RectTransform screen)
@@ -62,6 +65,11 @@ namespace Game
         public void ShowLoseScreen()
         {
             ShowScreen(_LoseScreen);
+        }
+
+        public void ShowWinScreen()
+        {
+            ShowScreen(_WinScreen);
         }
 
         public void OnRestartClicked()
