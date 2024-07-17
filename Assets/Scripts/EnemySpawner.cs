@@ -12,7 +12,7 @@ namespace Game
 
         #endregion
 
-        public List<BaseEnemy> enemies = new();
+        readonly public List<BaseEnemy> enemies = new();
 
         float _timeout = 0f;
 

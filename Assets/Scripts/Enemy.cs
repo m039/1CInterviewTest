@@ -58,7 +58,7 @@ namespace Game
             Position = p;
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        void OnTriggerEnter2D(Collider2D collision)
         {
             var p = collision.GetComponentInParent<Projectile>();
             if (p != null)
